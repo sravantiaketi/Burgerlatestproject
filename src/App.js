@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
 import Layout from './components/Layout/Layout';
@@ -10,13 +10,14 @@ import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 import * as actions from './store/actions/index';
 
-class App extends Component {
+const app = props => {
 
-  componentDidMount() {
-    this.props.onTryAutoSignup();
-  }
-
-  render() {
+  const {onTryAutoSignup} = props;
+  //useEffect is used in place of componentdidmount
+  useEffect(() => {
+    onTryAutoSignup();
+  }, [onTryAutoSignup]);
+ 
     let routes = (
       <Switch>
         <Route path="/auth" component={Auth} />
@@ -25,7 +26,7 @@ class App extends Component {
       </Switch>
     );
 
-    if (this.props.isAuthenticated) {
+    if (props.isAuthenticated) {
       routes = (
         <Switch>
           <Route path="/checkout" component={Checkout} />
@@ -45,7 +46,7 @@ class App extends Component {
       </div>
     );
   }
-}
+
 
 const mapStateToProps = state => {
   return {
@@ -59,4 +60,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(app));
